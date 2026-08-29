@@ -16,4 +16,15 @@ fun main() {
 
     val nombresCursos = arrayOfNulls<String>(cantidadCursos)
     val creditosCursos = IntArray(cantidadCursos)
+
+    // ==================== CICLO REPETITIVO ====================
+    for (i in 0 until cantidadCursos) {
+        println()
+        println("--- Curso ${i + 1} ---")
+        print("Nombre del curso: ")
+        nombresCursos[i] = readLine()!!.trim()
+
+        print("Créditos del curso: ")
+        creditosCursos[i] = readLine()!!.trim().toInt()
+    }
 }
