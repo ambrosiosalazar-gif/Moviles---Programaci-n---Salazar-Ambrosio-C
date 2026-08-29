@@ -58,4 +58,26 @@ fun main() {
         numeroCuotas = 2
     }
     montoPorCuota = totalAPagar / numeroCuotas
+
+    // ==================== 3. RESULTADOS ====================
+    println()
+    println("========== RESUMEN DE MATRÍCULA ==========")
+    println("Nombre: $nombre")
+    println("Cursos matriculados: $cantidadCursos")
+    println()
+
+    println("Curso                          Créditos   Costo")
+    println("--------------------------------------------------")
+    for (i in 0 until cantidadCursos) {
+        val costoCurso = creditosCursos[i] * valorCredito
+        println("%-30s %-10d S/. %.2f".format(nombresCursos[i], creditosCursos[i], costoCurso))
+    }
+    println("--------------------------------------------------")
+
+    println()
+    println("Total de créditos: $totalCreditos")
+    println("Total a pagar: S/. %.2f".format(totalAPagar))
+    println("Carga académica: $cargaAcademica")
+    println("Forma de pago: $numeroCuotas cuotas de S/. %.2f cada una".format(montoPorCuota))
+    println("============================================")
 }
