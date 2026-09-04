@@ -69,6 +69,10 @@ fun main() {
 
     val totalConMatricula = totalConTurno + montoMatricula
 
+    // IGV: 18% sobre el total (nuevo)
+    val igv = totalConMatricula * 0.18
+    val totalConIGV = totalConMatricula + igv
+
     val cargaAcademica: String
     if (totalCreditos <= 12) {
         cargaAcademica = "Malla regular"
@@ -80,12 +84,12 @@ fun main() {
 
     val numeroCuotas: Int
     val montoPorCuota: Double
-    if (totalConMatricula > 1500.0) {
+    if (totalConIGV > 1500.0) {
         numeroCuotas = 3
     } else {
         numeroCuotas = 2
     }
-    montoPorCuota = totalConMatricula / numeroCuotas
+    montoPorCuota = totalConIGV / numeroCuotas
 
     // ==================== 3. RESULTADOS ====================
     println()
@@ -109,7 +113,8 @@ fun main() {
     println("Subtotal cursos: S/. %.2f".format(totalCursos))
     println("Recargo por turno: S/. %.2f".format(recargoTurno))
     println("Monto de matrícula: S/. %.2f".format(montoMatricula))
-    println("Total a pagar: S/. %.2f".format(totalConMatricula))
+    println("IGV (18%%): S/. %.2f".format(igv))
+    println("Total a pagar (con IGV): S/. %.2f".format(totalConIGV))
     println("Carga académica: $cargaAcademica")
     println("Forma de pago: $numeroCuotas cuotas de S/. %.2f cada una".format(montoPorCuota))
     println("============================================")
