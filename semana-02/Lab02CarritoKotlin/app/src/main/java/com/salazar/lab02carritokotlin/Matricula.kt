@@ -2,6 +2,29 @@ import kotlin.system.exitProcess
 
 fun main() {
 
+    // ==================== AFORO (nuevo) ====================
+    // La aplicación comienza preguntando el aforo total de la institución
+    // (cuántos estudiantes como máximo se pueden matricular) y cuántos
+    // estudiantes ya están matriculados hasta el momento.
+    println("===== CONTROL DE AFORO =====")
+    print("Ingrese el aforo total de la institución: ")
+    val aforoTotal = readLine()!!.trim().toInt()
+
+    print("Ingrese la cantidad de estudiantes ya matriculados: ")
+    val matriculadosActuales = readLine()!!.trim().toInt()
+
+    if (matriculadosActuales >= aforoTotal) {
+        println()
+        println("========== AFORO COMPLETO ==========")
+        println("No se pueden matricular más estudiantes. El aforo de $aforoTotal ya fue alcanzado.")
+        println("=====================================")
+        exitProcess(0)
+    }
+
+    val cuposDisponibles = aforoTotal - matriculadosActuales
+    println("Cupos disponibles: $cuposDisponibles")
+    println()
+
     // ==================== 1. INPUTS ====================
     println("===== SISTEMA DE MATRÍCULA =====")
 
@@ -69,7 +92,6 @@ fun main() {
 
     val totalConMatricula = totalConTurno + montoMatricula
 
-    // IGV: 18% sobre el total (nuevo)
     val igv = totalConMatricula * 0.18
     val totalConIGV = totalConMatricula + igv
 
@@ -95,6 +117,7 @@ fun main() {
     println()
     println("========== RESUMEN DE MATRÍCULA ==========")
     println("Nombre: $nombre")
+    println("Aforo de la institución: $aforoTotal (cupos disponibles antes de esta matrícula: $cuposDisponibles)")
     println("Cursos matriculados: $cantidadCursos")
     println("Turno: $turno (recargo: ${(porcentajeRecargoTurno * 100).toInt()}%)")
     println("Categoría: $categoria")
