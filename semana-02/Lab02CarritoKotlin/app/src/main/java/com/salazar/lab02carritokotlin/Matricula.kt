@@ -2,6 +2,29 @@ import kotlin.system.exitProcess
 
 fun main() {
 
+    // ==================== AFORO (nuevo) ====================
+    // La aplicación comienza preguntando el aforo total de la institución
+    // (cuántos estudiantes como máximo se pueden matricular) y cuántos
+    // estudiantes ya están matriculados hasta el momento.
+    println("===== CONTROL DE AFORO =====")
+    print("Ingrese el aforo total de la institución: ")
+    val aforoTotal = readLine()!!.trim().toInt()
+
+    print("Ingrese la cantidad de estudiantes ya matriculados: ")
+    val matriculadosActuales = readLine()!!.trim().toInt()
+
+    if (matriculadosActuales >= aforoTotal) {
+        println()
+        println("========== AFORO COMPLETO ==========")
+        println("No se pueden matricular más estudiantes. El aforo de $aforoTotal ya fue alcanzado.")
+        println("=====================================")
+        exitProcess(0)
+    }
+
+    val cuposDisponibles = aforoTotal - matriculadosActuales
+    println("Cupos disponibles: $cuposDisponibles")
+    println()
+
     // ==================== 1. INPUTS ====================
     println("===== SISTEMA DE MATRÍCULA =====")
 
@@ -28,18 +51,50 @@ fun main() {
         creditosCursos[i] = readLine()!!.trim().toInt()
     }
 
+    // ==================== TURNO ====================
+    print("Ingrese el turno (mañana/tarde/noche): ")
+    val turno = readLine()!!.trim().lowercase()
+
+    val porcentajeRecargoTurno: Double
+    if (turno == "mañana") {
+        porcentajeRecargoTurno = 0.10
+    } else if (turno == "tarde") {
+        porcentajeRecargoTurno = 0.15
+    } else if (turno == "noche") {
+        porcentajeRecargoTurno = 0.20
+    } else {
+        porcentajeRecargoTurno = 0.0
+    }
+
+    // ==================== CATEGORÍA ====================
+    print("Ingrese la categoría (ordinario/becado): ")
+    val categoria = readLine()!!.trim().lowercase()
+
+    val montoMatricula: Double
+    if (categoria == "ordinario") {
+        print("Ingrese el monto de matrícula a pagar (S/.): ")
+        montoMatricula = readLine()!!.trim().toDouble()
+    } else {
+        montoMatricula = 0.0
+    }
+
     // ==================== 2. CÁLCULOS ====================
 
-    // Total de créditos: suma de los créditos de todos los cursos
     var totalCreditos = 0
     for (i in 0 until cantidadCursos) {
         totalCreditos += creditosCursos[i]
     }
 
-    // Costo total
-    val totalAPagar = totalCreditos * valorCredito
+    val totalCursos = totalCreditos * valorCredito
 
-    // Carga académica según el total de créditos
+    val recargoTurno = totalCursos * porcentajeRecargoTurno
+    val totalConTurno = totalCursos + recargoTurno
+
+    val totalConMatricula = totalConTurno + montoMatricula
+
+    val igv = totalConMatricula * 0.18
+    val totalConIGV = totalConMatricula + igv
+
     val cargaAcademica: String
     if (totalCreditos <= 12) {
         cargaAcademica = "Malla regular"
@@ -49,21 +104,23 @@ fun main() {
         cargaAcademica = "Requiere autorización"
     }
 
-    // Forma de pago según el total a pagar
     val numeroCuotas: Int
     val montoPorCuota: Double
-    if (totalAPagar > 1500.0) {
+    if (totalConIGV > 1500.0) {
         numeroCuotas = 3
     } else {
         numeroCuotas = 2
     }
-    montoPorCuota = totalAPagar / numeroCuotas
+    montoPorCuota = totalConIGV / numeroCuotas
 
     // ==================== 3. RESULTADOS ====================
     println()
     println("========== RESUMEN DE MATRÍCULA ==========")
     println("Nombre: $nombre")
+    println("Aforo de la institución: $aforoTotal (cupos disponibles antes de esta matrícula: $cuposDisponibles)")
     println("Cursos matriculados: $cantidadCursos")
+    println("Turno: $turno (recargo: ${(porcentajeRecargoTurno * 100).toInt()}%)")
+    println("Categoría: $categoria")
     println()
 
     println("Curso                          Créditos   Costo")
@@ -76,7 +133,11 @@ fun main() {
 
     println()
     println("Total de créditos: $totalCreditos")
-    println("Total a pagar: S/. %.2f".format(totalAPagar))
+    println("Subtotal cursos: S/. %.2f".format(totalCursos))
+    println("Recargo por turno: S/. %.2f".format(recargoTurno))
+    println("Monto de matrícula: S/. %.2f".format(montoMatricula))
+    println("IGV (18%%): S/. %.2f".format(igv))
+    println("Total a pagar (con IGV): S/. %.2f".format(totalConIGV))
     println("Carga académica: $cargaAcademica")
     println("Forma de pago: $numeroCuotas cuotas de S/. %.2f cada una".format(montoPorCuota))
     println("============================================")
