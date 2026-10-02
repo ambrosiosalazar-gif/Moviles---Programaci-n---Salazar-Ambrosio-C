@@ -9,6 +9,8 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,13 +26,23 @@ fun PantallaInicio(
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text("TECSUP Store") },
+            TopAppBar(
+                title = {
+                    Column {
+                        Text("TECSUP Store", fontWeight = FontWeight.Bold)
+                        Text("Más vendidos", style = MaterialTheme.typography.bodySmall)
+                    }
+                },
                 navigationIcon = {
                     IconButton(onClick = onMenuClick) {
                         Icon(Icons.Default.Menu, contentDescription = "Menú")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Morado,
+                    titleContentColor = Color.White,
+                    navigationIconContentColor = Color.White
+                )
             )
         }
     ) { padding ->
