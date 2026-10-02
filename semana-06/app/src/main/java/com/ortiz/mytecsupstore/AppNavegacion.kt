@@ -35,6 +35,7 @@ fun AppNavegacion() {
         drawerContent = {
             AppDrawer(
                 destinoActual = destinoActual,
+                favoritosCount = favoritos.size,
                 onDestinoClick = { destino ->
                     scope.launch { drawerState.close() }
                     val ruta = when (destino) {

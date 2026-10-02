@@ -30,6 +30,7 @@ val destinosDrawer = listOf(
 @Composable
 fun AppDrawer(
     destinoActual: String,
+    favoritosCount: Int = 0,
     onDestinoClick: (String) -> Unit
 ) {
     ModalDrawerSheet(drawerContainerColor = Color.White) {
@@ -81,6 +82,16 @@ fun AppDrawer(
                     )
                 },
                 icon = { Icon(destino.icono, contentDescription = null) },
+                badge = {
+                    if (destino.titulo == "Favoritos" && favoritosCount > 0) {
+                        Badge(
+                            containerColor = Morado,
+                            contentColor = Color.White
+                        ) {
+                            Text(favoritosCount.toString())
+                        }
+                    }
+                },
                 selected = activo,
                 onClick = { onDestinoClick(destino.titulo) },
                 colors = NavigationDrawerItemDefaults.colors(
