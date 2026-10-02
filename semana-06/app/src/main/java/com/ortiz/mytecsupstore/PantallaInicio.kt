@@ -13,7 +13,11 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PantallaInicio(onMenuClick: () -> Unit = {}) {
+fun PantallaInicio(
+    onMenuClick: () -> Unit = {},
+    favoritos: List<Int> = emptyList(),
+    onToggleFavorito: (Int) -> Unit = {}
+) {
     var categoriaSel by remember { mutableStateOf("Todos") }
     val lista = if (categoriaSel == "Todos") productos
     else productos.filter { it.categoria == categoriaSel }
@@ -48,7 +52,11 @@ fun PantallaInicio(onMenuClick: () -> Unit = {}) {
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(lista) { producto ->
-                    TarjetaProducto(producto)
+                    TarjetaProducto(
+                        producto = producto,
+                        esFavorito = producto.id in favoritos,
+                        onFavoritoClick = { onToggleFavorito(producto.id) }
+                    )
                 }
             }
         }

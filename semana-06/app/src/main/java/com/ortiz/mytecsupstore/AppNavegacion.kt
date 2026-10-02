@@ -18,6 +18,7 @@ fun AppNavegacion() {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val favoritos = remember { mutableStateListOf<Int>() }
 
     val entradaActual by navController.currentBackStackEntryAsState()
     val destinoActual = when (entradaActual?.destination?.route) {
@@ -51,7 +52,15 @@ fun AppNavegacion() {
         }
     ) {
         NavHost(navController = navController, startDestination = "inicio") {
-            composable("inicio") { PantallaInicio(onMenuClick = abrirMenu) }
+            composable("inicio") {
+                PantallaInicio(
+                    onMenuClick = abrirMenu,
+                    favoritos = favoritos,
+                    onToggleFavorito = { id ->
+                        if (id in favoritos) favoritos.remove(id) else favoritos.add(id)
+                    }
+                )
+            }
             composable("pedidos") { PantallaSimple("Mis pedidos", abrirMenu) }
             composable("favoritos") { PantallaSimple("Favoritos", abrirMenu) }
             composable("perfil") { PantallaSimple("Perfil", abrirMenu) }

@@ -3,6 +3,7 @@ package com.ortiz.mytecsupstore
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Warning
@@ -13,7 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TarjetaProducto(producto: Producto, modifier: Modifier = Modifier) {
+fun TarjetaProducto(
+    producto: Producto,
+    esFavorito: Boolean = false,
+    onFavoritoClick: () -> Unit = {},
+    modifier: Modifier = Modifier
+) {
     var expanded by remember { mutableStateOf(false) }
 
     Card(modifier = modifier.fillMaxWidth()) {
@@ -34,11 +40,20 @@ fun TarjetaProducto(producto: Producto, modifier: Modifier = Modifier) {
                     onDismissRequest = { expanded = false }
                 ) {
                     DropdownMenuItem(
-                        text = { Text("Favoritos") },
-                        leadingIcon = {
-                            Icon(Icons.Default.Favorite, contentDescription = null)
+                        text = {
+                            Text(if (esFavorito) "Quitar de favoritos" else "Favoritos")
                         },
-                        onClick = { expanded = false }
+                        leadingIcon = {
+                            Icon(
+                                if (esFavorito) Icons.Default.Favorite
+                                else Icons.Default.FavoriteBorder,
+                                contentDescription = null
+                            )
+                        },
+                        onClick = {
+                            onFavoritoClick()
+                            expanded = false
+                        }
                     )
                     DropdownMenuItem(
                         text = { Text("Compartir") },
