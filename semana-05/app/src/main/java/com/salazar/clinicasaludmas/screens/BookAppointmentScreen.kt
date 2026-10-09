@@ -10,24 +10,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.salazar.clinicasaludmas.model.Cita
-import com.salazar.clinicasaludmas.model.Medico
+import com.salazar.clinicasaludmas.data.MedicosRepository
 import com.salazar.clinicasaludmas.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookAppointmentScreen(
     navController: NavController,
-    medico: Medico,
-    citas: MutableList<Cita> // estado global recibido por parametro
+    medicoId: String
 ) {
-    val fechas = listOf("Jue 26", "Vie 27", "Sáb 28")   // minimo 3 opciones
-    val horas = listOf("9:00", "10:30", "3:00")          // minimo 3 opciones
+    val medico = MedicosRepository.obtenerMedico(medicoId)
+    val fechas = listOf("2026-10-12", "2026-10-13", "2026-10-14")
 
-    // Seleccion unica de fecha y hora - cada una es como un "grupo de RadioButton"
-    // pero implementado visualmente con FilterChip.
-    var fechaSeleccionada by remember { mutableStateOf(fechas[1]) }
-    var horaSeleccionada by remember { mutableStateOf(horas[1]) }
+    var fechaSeleccionada by remember { mutableStateOf(fechas.first()) }
+    val horariosDisponibles = MedicosRepository.horariosDisponibles(medicoId, fechaSeleccionada)
+    var horaSeleccionada by remember { mutableStateOf(horariosDisponibles.firstOrNull() ?: "") }
 
     Scaffold(
         topBar = {
@@ -43,13 +40,20 @@ fun BookAppointmentScreen(
     ) { padding ->
         Column(modifier = Modifier.padding(padding).fillMaxSize().padding(16.dp)) {
 
+            Text("Médico: ${medico?.nombre ?: ""}", style = MaterialTheme.typography.titleMedium)
+            Spacer(Modifier.height(16.dp))
+
             Text("Selecciona fecha", style = MaterialTheme.typography.titleSmall)
             Spacer(Modifier.height(8.dp))
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(fechas) { fecha ->
                     FilterChip(
                         selected = fecha == fechaSeleccionada,
-                        onClick = { fechaSeleccionada = fecha }, // solo un valor activo a la vez
+                        onClick = {
+                            fechaSeleccionada = fecha
+                            val nuevosHorarios = MedicosRepository.horariosDisponibles(medicoId, fecha)
+                            horaSeleccionada = nuevosHorarios.firstOrNull() ?: ""
+                        },
                         label = { Text(fecha) }
                     )
                 }
@@ -59,36 +63,33 @@ fun BookAppointmentScreen(
 
             Text("Selecciona hora", style = MaterialTheme.typography.titleSmall)
             Spacer(Modifier.height(8.dp))
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(horas) { hora ->
-                    FilterChip(
-                        selected = hora == horaSeleccionada,
-                        onClick = { horaSeleccionada = hora },
-                        label = { Text(hora) }
-                    )
+            if (horariosDisponibles.isEmpty()) {
+                Text("No hay horarios disponibles para esta fecha.", style = MaterialTheme.typography.bodySmall)
+            } else {
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(horariosDisponibles) { hora ->
+                        FilterChip(
+                            selected = hora == horaSeleccionada,
+                            onClick = { horaSeleccionada = hora },
+                            label = { Text(hora) }
+                        )
+                    }
                 }
             }
 
             Spacer(Modifier.weight(1f))
 
             Button(
+                enabled = horaSeleccionada.isNotEmpty(),
                 onClick = {
-                    // Crea la cita y la agrega al estado global ANTES de navegar
-                    val nuevaCita = Cita(
-                        id = citas.size + 1,
-                        medicoId = medico.id,
-                        medicoNombre = medico.nombre,
-                        especialidad = medico.especialidad,
-                        fecha = fechaSeleccionada,
-                        hora = horaSeleccionada,
-                        estado = "Confirmada"
+                    navController.navigate(
+                        Screen.ConfirmarCita.createRoute(medicoId, fechaSeleccionada, horaSeleccionada)
                     )
-                    citas.add(nuevaCita)
-                    // Ahora si navega, pasando el id de la cita recien creada
-                    navController.navigate(Screen.Confirmation.createRoute(nuevaCita.id))
                 },
                 modifier = Modifier.fillMaxWidth()
-            ) { Text("Confirmar cita") }
+            ) {
+                Text("Confirmar cita")
+            }
         }
     }
 }
