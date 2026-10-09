@@ -1,23 +1,26 @@
 package com.salazar.clinicasaludmas.navigation
 
 sealed class Screen(val route: String) {
+    object Splash : Screen("splash")
+    object Login : Screen("login")
+    object Registro : Screen("registro")
     object Home : Screen("home")
+    object Especialidades : Screen("especialidades")
 
-    // Aca recibira el id del medico que se elegira
-    object DoctorProfile : Screen("doctor_profile/{doctorId}") {
-        fun createRoute(doctorId: Int) = "doctor_profile/$doctorId"
+    object Medicos : Screen("medicos/{especialidadId}") {
+        fun createRoute(especialidadId: String) = "medicos/$especialidadId"
     }
 
-    // Recibe el id del medico para saber a quien se le agenda la cita
-    object BookAppointment : Screen("book_appointment/{doctorId}") {
-        fun createRoute(doctorId: Int) = "book_appointment/$doctorId"
+    object FechaHora : Screen("fechahora/{medicoId}") {
+        fun createRoute(medicoId: String) = "fechahora/$medicoId"
     }
 
-    // En este caso recibe el id de la cita creada
-    object Confirmation : Screen("confirmation/{citaId}") {
-        fun createRoute(citaId: Int) = "confirmation/$citaId"
+    object ConfirmarCita : Screen("confirmar/{medicoId}/{fecha}/{hora}") {
+        fun createRoute(medicoId: String, fecha: String, hora: String) = "confirmar/$medicoId/$fecha/$hora"
     }
 
+    object CitaExitosa : Screen("cita_exitosa")
     object MisCitas : Screen("mis_citas")
-    object HistorialMedico : Screen("historial_medico")
+    object Perfil : Screen("perfil")
+    object Resultados : Screen("resultados")
 }
