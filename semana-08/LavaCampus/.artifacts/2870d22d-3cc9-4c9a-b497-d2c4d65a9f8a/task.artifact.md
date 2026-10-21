@@ -1,0 +1,17 @@
+# Lista de Tareas — LavaCampus
+
+- `[x]` Paso 0: Preparar el proyecto base LavaCampus y sus dependencias (Commit 1: `chore: importa proyecto base LavaCampus`)
+- `[x]` Paso 1: Entidades Usuario, Pedido y DetallePedido (Commit 2: `feat(data): agrega entidades Usuario, Pedido y DetallePedido`)
+- `[x]` Paso 2: DAOs y relaciones uno a muchos (Commit 3: `feat(data): agrega DAOs y relaciones PedidoConDetalle y DetalleConServicio`)
+- `[x]` Paso 3: LavaDatabase, datos iniciales y LavaApp (Commit 4: `feat(data): registra entidades y siembra datos iniciales en LavaDatabase`)
+- `[x]` Paso 4: LavaRepositoryRoom completo (Commit 5: `feat(data): implementa LavaRepositoryRoom con todas las operaciones`)
+- `[x]` Paso 5: PreferenciasStore con DataStore (Commit 6: `feat(data): agrega PreferenciasStore con DataStore`)
+- `[/]` Paso 6: SesionViewModel y LoginScreen (Commit 7: `feat(viewmodel): agrega SesionViewModel y login con selector de rol`)
+- `[ ]` Paso 7: Inicio del estudiante con seguimiento de pedido (Commit 8)
+- `[ ]` Paso 8: Nuevo pedido con total y fecha de entrega (Commit 9)
+- `[ ]` Paso 9: Detalle del pedido y cancelación del estudiante (Commit 10)
+- `[ ]` Paso 10: Mis pedidos y tarifas (Commit 11)
+- `[ ]` Paso 11: Panel del administrador con contadores y gráficos (Commit 12)
+- `[ ]` Paso 12: Bandeja y gestión de pedidos con casilleros (Commit 13)
+- `[ ]` Paso 13: Servicios, clientes, ajustes y cambio de perfil (Commit 14)
+- `[ ]` Paso 14: Pruebas de aceptación y README (Commit 15)

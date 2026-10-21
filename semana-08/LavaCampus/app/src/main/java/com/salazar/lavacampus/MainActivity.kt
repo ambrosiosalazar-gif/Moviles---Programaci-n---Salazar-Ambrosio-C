@@ -6,25 +6,25 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.salazar.lavacampus.ui.estudiante.SplashScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.salazar.lavacampus.ui.navigation.NavLava
 import com.salazar.lavacampus.ui.theme.LavaTheme
+import com.salazar.lavacampus.viewmodel.LavaViewModelFactory
+import com.salazar.lavacampus.viewmodel.SesionViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val app = application as LavaApp
         setContent {
             LavaTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    var showSplash by remember { mutableStateOf(true) }
-                    if (showSplash) {
-                        SplashScreen(onFinish = { showSplash = false })
-                    }
+                    val sesionViewModel: SesionViewModel = viewModel(
+                        factory = LavaViewModelFactory(app.repository, app.prefsStore)
+                    )
+                    NavLava(sesionViewModel = sesionViewModel)
                 }
             }
         }
