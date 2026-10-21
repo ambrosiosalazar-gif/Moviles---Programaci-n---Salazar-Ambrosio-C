@@ -39,6 +39,14 @@ class LavaViewModelFactory(
             @Suppress("UNCHECKED_CAST")
             return PanelViewModel(repo) as T
         }
+        if (BandejaViewModel::class.java.isAssignableFrom(modelClass)) {
+            @Suppress("UNCHECKED_CAST")
+            return BandejaViewModel(repo) as T
+        }
+        if (GestionPedidoViewModel::class.java.isAssignableFrom(modelClass)) {
+            @Suppress("UNCHECKED_CAST")
+            return GestionPedidoViewModel(repo, extraId) as T
+        }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }
