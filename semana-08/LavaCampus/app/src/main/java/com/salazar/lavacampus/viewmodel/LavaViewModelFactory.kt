@@ -35,6 +35,10 @@ class LavaViewModelFactory(
             @Suppress("UNCHECKED_CAST")
             return MisPedidosViewModel(repo, extraId) as T
         }
+        if (PanelViewModel::class.java.isAssignableFrom(modelClass)) {
+            @Suppress("UNCHECKED_CAST")
+            return PanelViewModel(repo) as T
+        }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }
