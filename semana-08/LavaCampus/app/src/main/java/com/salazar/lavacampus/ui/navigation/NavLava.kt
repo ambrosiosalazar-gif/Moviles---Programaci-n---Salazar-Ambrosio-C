@@ -11,9 +11,11 @@ import com.salazar.lavacampus.data.prefs.PreferenciasStore
 import com.salazar.lavacampus.data.repository.LavaRepository
 import com.salazar.lavacampus.ui.estudiante.InicioScreen
 import com.salazar.lavacampus.ui.estudiante.LoginScreen
+import com.salazar.lavacampus.ui.estudiante.NuevoPedidoScreen
 import com.salazar.lavacampus.ui.estudiante.SplashScreen
 import com.salazar.lavacampus.viewmodel.InicioViewModel
 import com.salazar.lavacampus.viewmodel.LavaViewModelFactory
+import com.salazar.lavacampus.viewmodel.NuevoPedidoViewModel
 import com.salazar.lavacampus.viewmodel.SesionViewModel
 
 @Composable
@@ -56,8 +58,18 @@ fun NavLava(
             )
             InicioScreen(
                 vm = inicioVm,
-                onNuevoPedido = {},
+                onNuevoPedido = { navController.navigate(Rutas.NuevoPedido.ruta) },
                 onDetallePedido = {}
+            )
+        }
+        composable(Rutas.NuevoPedido.ruta) {
+            val nuevoVm: NuevoPedidoViewModel = viewModel(
+                factory = LavaViewModelFactory(repository, prefsStore, usuarioId)
+            )
+            NuevoPedidoScreen(
+                vm = nuevoVm,
+                onVolver = { navController.popBackStack() },
+                onPedidoCreado = { navController.popBackStack() }
             )
         }
     }

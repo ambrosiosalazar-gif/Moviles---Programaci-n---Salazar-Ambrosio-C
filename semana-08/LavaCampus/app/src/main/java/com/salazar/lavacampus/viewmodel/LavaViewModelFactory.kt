@@ -23,6 +23,10 @@ class LavaViewModelFactory(
             @Suppress("UNCHECKED_CAST")
             return InicioViewModel(repo, usuarioId) as T
         }
+        if (NuevoPedidoViewModel::class.java.isAssignableFrom(modelClass)) {
+            @Suppress("UNCHECKED_CAST")
+            return NuevoPedidoViewModel(repo, usuarioId) as T
+        }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }
