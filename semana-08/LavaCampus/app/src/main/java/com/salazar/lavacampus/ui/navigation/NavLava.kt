@@ -9,10 +9,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.salazar.lavacampus.data.prefs.PreferenciasStore
 import com.salazar.lavacampus.data.repository.LavaRepository
+import com.salazar.lavacampus.ui.estudiante.DetallePedidoScreen
 import com.salazar.lavacampus.ui.estudiante.InicioScreen
 import com.salazar.lavacampus.ui.estudiante.LoginScreen
 import com.salazar.lavacampus.ui.estudiante.NuevoPedidoScreen
 import com.salazar.lavacampus.ui.estudiante.SplashScreen
+import com.salazar.lavacampus.viewmodel.DetallePedidoViewModel
 import com.salazar.lavacampus.viewmodel.InicioViewModel
 import com.salazar.lavacampus.viewmodel.LavaViewModelFactory
 import com.salazar.lavacampus.viewmodel.NuevoPedidoViewModel
@@ -59,7 +61,7 @@ fun NavLava(
             InicioScreen(
                 vm = inicioVm,
                 onNuevoPedido = { navController.navigate(Rutas.NuevoPedido.ruta) },
-                onDetallePedido = {}
+                onDetallePedido = { id -> navController.navigate(Rutas.DetallePedido.crearRuta(id)) }
             )
         }
         composable(Rutas.NuevoPedido.ruta) {
@@ -70,6 +72,16 @@ fun NavLava(
                 vm = nuevoVm,
                 onVolver = { navController.popBackStack() },
                 onPedidoCreado = { navController.popBackStack() }
+            )
+        }
+        composable(Rutas.DetallePedido.ruta) { backStackEntry ->
+            val pedidoId = backStackEntry.arguments?.getString("pedidoId")?.toIntOrNull() ?: 0
+            val detalleVm: DetallePedidoViewModel = viewModel(
+                factory = LavaViewModelFactory(repository, prefsStore, pedidoId)
+            )
+            DetallePedidoScreen(
+                vm = detalleVm,
+                onVolver = { navController.popBackStack() }
             )
         }
     }

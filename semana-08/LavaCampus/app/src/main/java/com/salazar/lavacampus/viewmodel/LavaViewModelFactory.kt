@@ -8,7 +8,7 @@ import com.salazar.lavacampus.data.repository.LavaRepository
 class LavaViewModelFactory(
     private val repo: LavaRepository,
     private val prefsStore: PreferenciasStore,
-    private val usuarioId: Int = 0
+    private val extraId: Int = 0
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (SesionViewModel::class.java.isAssignableFrom(modelClass)) {
@@ -21,11 +21,15 @@ class LavaViewModelFactory(
         }
         if (InicioViewModel::class.java.isAssignableFrom(modelClass)) {
             @Suppress("UNCHECKED_CAST")
-            return InicioViewModel(repo, usuarioId) as T
+            return InicioViewModel(repo, extraId) as T
         }
         if (NuevoPedidoViewModel::class.java.isAssignableFrom(modelClass)) {
             @Suppress("UNCHECKED_CAST")
-            return NuevoPedidoViewModel(repo, usuarioId) as T
+            return NuevoPedidoViewModel(repo, extraId) as T
+        }
+        if (DetallePedidoViewModel::class.java.isAssignableFrom(modelClass)) {
+            @Suppress("UNCHECKED_CAST")
+            return DetallePedidoViewModel(repo, extraId) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
