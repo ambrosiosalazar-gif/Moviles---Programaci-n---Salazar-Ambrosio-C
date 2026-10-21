@@ -15,10 +15,10 @@ interface PedidoDao {
     suspend fun insertar(p: Pedido): Long
 
     @Query("UPDATE pedidos SET estado = :estado, casillero = :casillero WHERE id = :id")
-    suspend fun actualizarEstado(id: Int, estado: String, casillero: String?)
+    suspend fun actualizarEstado(id: Int, estado: String, casillero: String?): Int
 
     @Query("UPDATE pedidos SET pagado = :pagado WHERE id = :id")
-    suspend fun actualizarPagado(id: Int, pagado: Boolean)
+    suspend fun actualizarPagado(id: Int, pagado: Boolean): Int
 
     @Query("SELECT * FROM pedidos WHERE id = :id")
     suspend fun obtener(id: Int): Pedido?

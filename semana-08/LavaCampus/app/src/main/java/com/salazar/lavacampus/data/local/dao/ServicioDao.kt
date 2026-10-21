@@ -27,14 +27,14 @@ interface ServicioDao {
     suspend fun insertar(s: Servicio): Long
 
     @Insert
-    suspend fun insertarTodos(lista: List<Servicio>)
+    suspend fun insertarTodos(lista: List<Servicio>): List<Long>
 
     @Update
-    suspend fun actualizar(s: Servicio)
+    suspend fun actualizar(s: Servicio): Int
 
     @Delete
-    suspend fun eliminar(s: Servicio)
+    suspend fun eliminar(s: Servicio): Int
 
     @Query("UPDATE servicios SET activo = :activo WHERE id = :id")
-    suspend fun cambiarActivo(id: Int, activo: Boolean)
+    suspend fun cambiarActivo(id: Int, activo: Boolean): Int
 }

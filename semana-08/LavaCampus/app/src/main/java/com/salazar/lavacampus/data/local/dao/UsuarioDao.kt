@@ -14,7 +14,7 @@ interface UsuarioDao {
     suspend fun login(correo: String, clave: String): Usuario?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertarTodos(lista: List<Usuario>)
+    suspend fun insertarTodos(lista: List<Usuario>): List<Long>
 
     @Query("SELECT COUNT(*) FROM usuarios")
     suspend fun contar(): Int

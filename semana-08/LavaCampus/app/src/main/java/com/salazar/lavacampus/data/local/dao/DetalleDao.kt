@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface DetalleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertarTodos(lista: List<DetallePedido>)
+    suspend fun insertarTodos(lista: List<DetallePedido>): List<Long>
 
     @Query("SELECT COUNT(*) FROM detalles_pedido WHERE servicioId = :servicioId")
     suspend fun contarPorServicio(servicioId: Int): Int
