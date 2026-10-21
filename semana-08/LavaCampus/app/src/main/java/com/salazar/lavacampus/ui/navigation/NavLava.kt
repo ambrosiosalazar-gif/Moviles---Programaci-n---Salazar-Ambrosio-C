@@ -1,18 +1,29 @@
 package com.salazar.lavacampus.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.salazar.lavacampus.data.prefs.PreferenciasStore
+import com.salazar.lavacampus.data.repository.LavaRepository
+import com.salazar.lavacampus.ui.estudiante.InicioScreen
 import com.salazar.lavacampus.ui.estudiante.LoginScreen
 import com.salazar.lavacampus.ui.estudiante.SplashScreen
+import com.salazar.lavacampus.viewmodel.InicioViewModel
+import com.salazar.lavacampus.viewmodel.LavaViewModelFactory
 import com.salazar.lavacampus.viewmodel.SesionViewModel
 
 @Composable
 fun NavLava(
+    repository: LavaRepository,
+    prefsStore: PreferenciasStore,
     sesionViewModel: SesionViewModel
 ) {
     val navController = rememberNavController()
+    val usuarioId by sesionViewModel.usuarioId.collectAsState(initial = 0)
 
     NavHost(
         navController = navController,
@@ -31,8 +42,22 @@ fun NavLava(
             LoginScreen(
                 vm = sesionViewModel,
                 onLoginExitoso = { rol ->
-                    // Navegación según rol
+                    if (rol.name == "CLIENTE") {
+                        navController.navigate(Rutas.InicioEstudiante.ruta) {
+                            popUpTo(Rutas.Login.ruta) { inclusive = true }
+                        }
+                    }
                 }
+            )
+        }
+        composable(Rutas.InicioEstudiante.ruta) {
+            val inicioVm: InicioViewModel = viewModel(
+                factory = LavaViewModelFactory(repository, prefsStore, usuarioId)
+            )
+            InicioScreen(
+                vm = inicioVm,
+                onNuevoPedido = {},
+                onDetallePedido = {}
             )
         }
     }

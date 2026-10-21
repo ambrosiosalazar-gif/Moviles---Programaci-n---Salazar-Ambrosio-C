@@ -24,7 +24,11 @@ class MainActivity : ComponentActivity() {
                     val sesionViewModel: SesionViewModel = viewModel(
                         factory = LavaViewModelFactory(app.repository, app.prefsStore)
                     )
-                    NavLava(sesionViewModel = sesionViewModel)
+                    NavLava(
+                        repository = app.repository,
+                        prefsStore = app.prefsStore,
+                        sesionViewModel = sesionViewModel
+                    )
                 }
             }
         }
