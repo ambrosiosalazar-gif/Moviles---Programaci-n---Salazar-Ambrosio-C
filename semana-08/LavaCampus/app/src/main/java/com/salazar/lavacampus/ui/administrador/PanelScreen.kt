@@ -36,6 +36,7 @@ fun PanelScreen(
     val enProceso by vm.enProceso.collectAsState()
     val porRecoger by vm.porRecoger.collectAsState()
     val ingresosSemana by vm.ingresosSemana.collectAsState()
+    val diagnostico by vm.diagnosticoCongestion.collectAsState()
     val porEstado by vm.porEstado.collectAsState()
     val porServicio by vm.porServicio.collectAsState()
 
@@ -49,6 +50,37 @@ fun PanelScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "🧠 Indicador Inteligente de Congestión",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = diagnoseLevelText(diagnostico.nivel.name),
+                                fontWeight = FontWeight.Bold,
+                                color = diagnostico.nivel.color
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(text = "Estado: ${diagnostico.nivel.titulo}", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                        Text(text = "Pedidos activos evaluados: ${diagnostico.totalActivos}", fontSize = 12.sp)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(text = "💡 ${diagnostico.recomendacion}", fontSize = 13.sp)
+                    }
+                }
+            }
+
             if (porRecoger > 0) {
                 item {
                     Card(
@@ -147,4 +179,10 @@ fun PanelScreen(
             }
         }
     }
+}
+
+private fun diagnoseLevelText(nivel: String): String = when (nivel) {
+    "BAJO" -> "🟢 Normal"
+    "MODERADO" -> "🟡 Precaución"
+    else -> "🔴 ¡Alerta!"
 }

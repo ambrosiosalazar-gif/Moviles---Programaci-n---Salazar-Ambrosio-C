@@ -3,6 +3,8 @@ package com.salazar.lavacampus.viewmodel
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.salazar.lavacampus.ai.AnalizadorCongestion
+import com.salazar.lavacampus.ai.DiagnosticoCongestion
 import com.salazar.lavacampus.data.repository.LavaRepository
 import com.salazar.lavacampus.model.EstadoPedido
 import com.salazar.lavacampus.ui.components.graficos.DatoGrafico
@@ -32,6 +34,10 @@ class PanelViewModel(repo: LavaRepository) : ViewModel() {
 
     val ingresosSemana: StateFlow<Double> = repo.observarIngresosDesde(inicioSemanaStr)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
+
+    val diagnosticoCongestion: StateFlow<DiagnosticoCongestion> = repo.observarPedidos()
+        .map { AnalizadorCongestion.evaluarCongestion(it) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AnalizadorCongestion.evaluarCongestion(emptyList()))
 
     val porEstado: StateFlow<List<DatoGrafico>> = combine(
         repo.observarCantidadPorEstado(EstadoPedido.RECIBIDO),
