@@ -1,7 +1,7 @@
 package com.salazar.lavacampus.ui.components
 
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -12,19 +12,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salazar.lavacampus.ai.AnalizadorNotas
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SmartNotesChips(
     nota: String?,
     modifier: Modifier = Modifier
 ) {
-    val etiquetas = AnalizadorNotas.extraerEtiquetas(nota)
+    val etiquetas = try {
+        AnalizadorNotas.extraerEtiquetas(nota)
+    } catch (e: Exception) {
+        emptyList()
+    }
     if (etiquetas.isEmpty()) return
 
-    FlowRow(
+    Row(
         modifier = modifier.padding(vertical = 4.dp),
-        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp),
-        verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp)
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         etiquetas.forEach { tag ->
             Surface(

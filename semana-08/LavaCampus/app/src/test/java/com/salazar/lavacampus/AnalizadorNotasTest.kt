@@ -14,6 +14,17 @@ class AnalizadorNotasTest {
     }
 
     @Test
+    fun testEscenarioEscrituraParcial() {
+        // Al escribir letra por letra (ej. "u", "ur", "urg"), no debe lanzar excepciones y retornar lista vacía o acorde
+        val e1 = AnalizadorNotas.extraerEtiquetas("u")
+        val e2 = AnalizadorNotas.extraerEtiquetas("ur")
+        val e3 = AnalizadorNotas.extraerEtiquetas("urg")
+        assertTrue(e1.isEmpty())
+        assertTrue(e2.isEmpty())
+        assertTrue(e3.isEmpty())
+    }
+
+    @Test
     fun testNotaNormalUnicaEtiqueta() {
         val etiquetas = AnalizadorNotas.extraerEtiquetas("Por favor lavar con agua fría")
         assertEquals(1, etiquetas.size)
