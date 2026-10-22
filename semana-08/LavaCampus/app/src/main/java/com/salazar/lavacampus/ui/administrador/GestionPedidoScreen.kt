@@ -32,6 +32,7 @@ import com.salazar.lavacampus.model.Casilleros
 import com.salazar.lavacampus.model.EstadoPedido
 import com.salazar.lavacampus.ui.components.AppTopBar
 import com.salazar.lavacampus.ui.components.EstadoPedidoChip
+import com.salazar.lavacampus.ui.components.SmartNotesChips
 import com.salazar.lavacampus.ui.components.StepperEstadoVertical
 import com.salazar.lavacampus.viewmodel.GestionPedidoViewModel
 
@@ -79,6 +80,11 @@ fun GestionPedidoScreen(
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(text = "Estudiante: ${p.usuario.nombre} (${p.usuario.codigo})", fontWeight = FontWeight.Bold)
                             Text(text = "Fecha: ${p.pedido.fechaRegistro} • Entrega: ${p.pedido.fechaEntrega}")
+                            if (!p.pedido.nota.isNullOrBlank()) {
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(text = "Nota: ${p.pedido.nota}", fontSize = 13.sp)
+                                SmartNotesChips(nota = p.pedido.nota)
+                            }
                         }
                     }
                 }

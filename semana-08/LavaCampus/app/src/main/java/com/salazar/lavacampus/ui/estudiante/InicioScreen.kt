@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.salazar.lavacampus.model.EstadoPedido
 import com.salazar.lavacampus.ui.components.AppTopBar
 import com.salazar.lavacampus.ui.components.PedidoCard
+import com.salazar.lavacampus.ui.components.SmartNotesChips
 import com.salazar.lavacampus.ui.components.StepperEstadoHorizontal
 import com.salazar.lavacampus.viewmodel.InicioViewModel
 
@@ -114,6 +115,10 @@ fun InicioScreen(
                             StepperEstadoHorizontal(estadoActual = estado)
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(text = "Entrega estimada: ${p.pedido.fechaEntrega}")
+                            if (!p.pedido.nota.isNullOrBlank()) {
+                                Spacer(modifier = Modifier.height(4.dp))
+                                SmartNotesChips(nota = p.pedido.nota)
+                            }
                             if (estado == EstadoPedido.LISTO && p.pedido.casillero != null) {
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
@@ -154,7 +159,8 @@ fun InicioScreen(
                     total = p.pedido.total,
                     estado = EstadoPedido.valueOf(p.pedido.estado),
                     onClick = { onDetallePedido(p.pedido.id) },
-                    casillero = p.pedido.casillero
+                    casillero = p.pedido.casillero,
+                    nota = p.pedido.nota
                 )
             }
         }

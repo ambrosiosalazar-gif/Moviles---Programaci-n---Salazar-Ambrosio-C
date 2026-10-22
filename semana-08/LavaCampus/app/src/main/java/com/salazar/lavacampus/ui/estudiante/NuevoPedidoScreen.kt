@@ -29,6 +29,7 @@ import com.salazar.lavacampus.ui.components.IconoServicio
 import com.salazar.lavacampus.ui.components.LavaButton
 import com.salazar.lavacampus.ui.components.LavaTextField
 import com.salazar.lavacampus.ui.components.SelectorCantidad
+import com.salazar.lavacampus.ui.components.SmartNotesChips
 import com.salazar.lavacampus.viewmodel.NuevoPedidoViewModel
 
 @Composable
@@ -103,6 +104,11 @@ fun NuevoPedidoScreen(
                         onValorCambio = { vm.actualizarNota(it) },
                         label = "Nota adicional (opcional)"
                     )
+                    if (nota.isNotBlank()) {
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(text = "Etiquetas detectadas por IA:", fontSize = 12.sp, color = MaterialTheme.colorScheme.primary)
+                        SmartNotesChips(nota = nota)
+                    }
                 }
             }
 

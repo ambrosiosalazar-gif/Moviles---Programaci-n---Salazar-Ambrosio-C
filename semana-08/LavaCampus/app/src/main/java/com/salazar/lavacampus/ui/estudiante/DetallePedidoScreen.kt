@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import com.salazar.lavacampus.model.EstadoPedido
 import com.salazar.lavacampus.ui.components.AppTopBar
 import com.salazar.lavacampus.ui.components.EstadoPedidoChip
+import com.salazar.lavacampus.ui.components.SmartNotesChips
 import com.salazar.lavacampus.ui.components.StepperEstadoVertical
 import com.salazar.lavacampus.viewmodel.DetallePedidoViewModel
 
@@ -83,6 +84,11 @@ fun DetallePedidoScreen(
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(text = "Fecha de registro: ${p.pedido.fechaRegistro}", fontSize = 14.sp)
                     Text(text = "Entrega estimada: ${p.pedido.fechaEntrega}", fontSize = 14.sp)
+                    if (!p.pedido.nota.isNullOrBlank()) {
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(text = "Nota: ${p.pedido.nota}", fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                        SmartNotesChips(nota = p.pedido.nota)
+                    }
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 

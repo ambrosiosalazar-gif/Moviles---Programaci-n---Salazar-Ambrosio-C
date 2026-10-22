@@ -79,7 +79,8 @@ fun MisPedidosScreen(
                         total = p.pedido.total,
                         estado = EstadoPedido.valueOf(p.pedido.estado),
                         onClick = { onDetallePedido(p.pedido.id) },
-                        casillero = p.pedido.casillero
+                        casillero = p.pedido.casillero,
+                        nota = p.pedido.nota
                     )
                 }
             }

@@ -27,7 +27,8 @@ fun PedidoCard(
     estado: EstadoPedido,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    casillero: String? = null
+    casillero: String? = null,
+    nota: String? = null
 ) {
     Card(
         modifier = modifier
@@ -68,6 +69,10 @@ fun PedidoCard(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.secondary
                 )
+            }
+            if (!nota.isNullOrBlank()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                SmartNotesChips(nota = nota)
             }
         }
     }
