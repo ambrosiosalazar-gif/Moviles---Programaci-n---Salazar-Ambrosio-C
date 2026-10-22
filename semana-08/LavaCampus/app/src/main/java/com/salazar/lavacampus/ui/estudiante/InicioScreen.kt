@@ -36,6 +36,7 @@ fun InicioScreen(
 ) {
     val pedidoActivo by vm.pedidoActivo.collectAsState()
     val recientes by vm.recientes.collectAsState()
+    val sugerenciaIA by vm.sugerenciaIA.collectAsState()
 
     Scaffold(
         topBar = { AppTopBar(titulo = "LavaCampus - Estudiante") }
@@ -53,6 +54,37 @@ fun InicioScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Nuevo pedido")
+                }
+            }
+
+            if (sugerenciaIA != null) {
+                item {
+                    val sug = sugerenciaIA!!
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (sug.esUrgente) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.surfaceVariant
+                        )
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(
+                                text = "🤖 ${sug.titulo}",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text(text = sug.descripcion, fontSize = 14.sp)
+                            if (sug.servicioSugeridoNombre != null) {
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "Servicio recomendado: ${sug.servicioSugeridoNombre}",
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    }
                 }
             }
 
