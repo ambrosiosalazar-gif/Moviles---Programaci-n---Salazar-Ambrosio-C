@@ -22,21 +22,30 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
     private val _detalle = MutableStateFlow<UiState<DetalleUi>>(UiState.Cargando)
     val detalle: StateFlow<UiState<DetalleUi>> = _detalle.asStateFlow()
 
+    private val _usuarioFiltro = MutableStateFlow<Int?>(null)
+    val usuarioFiltro: StateFlow<Int?> = _usuarioFiltro.asStateFlow()
+
     init { cargar() }
 
     fun cargar() {
         viewModelScope.launch {
             _lista.value = UiState.Cargando
-            repo.listar()
+            val userId = _usuarioFiltro.value
+            val resultado = if (userId == null) repo.listar() else repo.porUsuario(userId)
+            resultado
                 .onSuccess { _lista.value = UiState.Exito(it) }
                 .onFailure { _lista.value = UiState.Error(mensajeDe(it)) }
         }
     }
 
+    fun filtrar(userId: Int?) {
+        _usuarioFiltro.value = userId
+        cargar()
+    }
+
     fun abrir(id: Int) {
         viewModelScope.launch {
             _detalle.value = UiState.Cargando
-            // Las dos llamadas se hacen a la vez
             val (resPost, resComentarios) = coroutineScope {
                 val p = async { repo.detalle(id) }
                 val c = async { repo.comentarios(id) }
