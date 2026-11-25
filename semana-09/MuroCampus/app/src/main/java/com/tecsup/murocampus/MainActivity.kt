@@ -11,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tecsup.murocampus.data.PostRepositoryRemote
 import com.tecsup.murocampus.data.remote.RetrofitClient
+import com.tecsup.murocampus.ui.PantallaCrear
 import com.tecsup.murocampus.ui.PantallaDetalle
 import com.tecsup.murocampus.ui.PantallaLista
 import com.tecsup.murocampus.ui.theme.MuroCampusTheme
@@ -27,12 +28,17 @@ class MainActivity : ComponentActivity() {
                     factory = PostsViewModelFactory(PostRepositoryRemote(RetrofitClient.api))
                 )
                 var idSeleccionado by rememberSaveable { mutableStateOf<Int?>(null) }
+                var creando by rememberSaveable { mutableStateOf(false) }
                 val id = idSeleccionado
 
-                if (id == null) {
-                    PantallaLista(vm, onPostClick = { idSeleccionado = it })
-                } else {
-                    PantallaDetalle(vm, id, onAtras = { idSeleccionado = null })
+                when {
+                    creando -> PantallaCrear(vm, onAtras = { creando = false })
+                    id != null -> PantallaDetalle(vm, id, onAtras = { idSeleccionado = null })
+                    else -> PantallaLista(
+                        vm,
+                        onPostClick = { idSeleccionado = it },
+                        onCrear = { creando = true }
+                    )
                 }
             }
         }

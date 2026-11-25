@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tecsup.murocampus.data.PostRepository
 import com.tecsup.murocampus.model.Comentario
+import com.tecsup.murocampus.model.NuevoPost
 import com.tecsup.murocampus.model.Post
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -16,14 +17,21 @@ data class DetalleUi(val post: Post, val comentarios: List<Comentario>)
 
 class PostsViewModel(private val repo: PostRepository) : ViewModel() {
 
+    // Lista
     private val _lista = MutableStateFlow<UiState<List<Post>>>(UiState.Cargando)
     val lista: StateFlow<UiState<List<Post>>> = _lista.asStateFlow()
 
+    // Detalle
     private val _detalle = MutableStateFlow<UiState<DetalleUi>>(UiState.Cargando)
     val detalle: StateFlow<UiState<DetalleUi>> = _detalle.asStateFlow()
 
+    // Filtro por usuario (null = Todos)
     private val _usuarioFiltro = MutableStateFlow<Int?>(null)
     val usuarioFiltro: StateFlow<Int?> = _usuarioFiltro.asStateFlow()
+
+    // Crear (null = aún no se envió)
+    private val _creado = MutableStateFlow<UiState<Post>?>(null)
+    val creado: StateFlow<UiState<Post>?> = _creado.asStateFlow()
 
     init { cargar() }
 
@@ -61,5 +69,18 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
             }
             _detalle.value = UiState.Exito(DetalleUi(post, comentarios))
         }
+    }
+
+    fun publicar(titulo: String, texto: String) {
+        viewModelScope.launch {
+            _creado.value = UiState.Cargando
+            repo.crear(NuevoPost(userId = 1, title = titulo.trim(), body = texto.trim()))
+                .onSuccess { _creado.value = UiState.Exito(it) }
+                .onFailure { _creado.value = UiState.Error(mensajeDe(it)) }
+        }
+    }
+
+    fun limpiarCreado() {
+        _creado.value = null
     }
 }

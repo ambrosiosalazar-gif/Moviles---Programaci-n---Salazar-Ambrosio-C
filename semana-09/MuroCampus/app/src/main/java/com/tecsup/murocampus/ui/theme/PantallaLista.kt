@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,7 +30,8 @@ import com.tecsup.murocampus.viewmodel.UiState
 @Composable
 fun PantallaLista(
     vm: PostsViewModel,
-    onPostClick: (Int) -> Unit = {}
+    onPostClick: (Int) -> Unit = {},
+    onCrear: () -> Unit = {}
 ) {
     val estado by vm.lista.collectAsStateWithLifecycle()
     val filtro by vm.usuarioFiltro.collectAsStateWithLifecycle()
@@ -43,9 +45,14 @@ fun PantallaLista(
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = onCrear) { Text("+") }
         }
     ) { padding ->
         Column(Modifier.padding(padding)) {
+
+            // Fila de chips: Todos, Usuario 1 ... Usuario 10
             LazyRow(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -66,6 +73,7 @@ fun PantallaLista(
                 }
             }
 
+            // Estados de la lista
             when (val e = estado) {
                 is UiState.Cargando -> Cargando()
                 is UiState.Error -> ErrorConReintento(
