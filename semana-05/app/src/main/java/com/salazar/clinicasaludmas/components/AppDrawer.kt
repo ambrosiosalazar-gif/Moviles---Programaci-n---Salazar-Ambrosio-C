@@ -4,62 +4,118 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Event
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.salazar.clinicasaludmas.navigation.Screen
 
-data class DrawerItem(val label: String, val route: String, val icon: ImageVector)
-
-private val drawerItems = listOf(
-    DrawerItem("Inicio", Screen.Home.route, Icons.Default.Home),
-    DrawerItem("Mis citas", Screen.MisCitas.route, Icons.Default.Event),
-    DrawerItem("Historial médico", Screen.HistorialMedico.route, Icons.Default.History)
-)
-
-// Contenido del menu lateral. Se declara envolviendo el Scaffold (en AppNavigation)
-// y no como parametro del Scaffold, ya que este estara permanentemente en la app
 @Composable
 fun AppDrawer(
-    currentRoute: String?,
-    onDestinationClick: (String) -> Unit,
+    usuarioNombre: String,
+    onNavigate: (String) -> Unit,
+    onCerrarSesion: () -> Unit,
     onCloseDrawer: () -> Unit
 ) {
-    ModalDrawerSheet {
-        Column(Modifier.padding(16.dp)) {
+    ModalDrawerSheet(drawerContainerColor = Color.White) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp)
+        ) {
+            // ENCABEZADO DE USUARIO CON AVATAR
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
-                    modifier = Modifier.size(40.dp).clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primaryContainer),
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary),
                     contentAlignment = Alignment.Center
-                ) { Text("JP") }
-                Spacer(Modifier.width(12.dp))
+                ) {
+                    Text(
+                        text = usuarioNombre.take(2).uppercase(),
+                        color = Color.White,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Spacer(modifier = Modifier.width(14.dp))
                 Column {
-                    Text("Juan Pérez", style = MaterialTheme.typography.titleSmall)
-                    Text("Paciente", style = MaterialTheme.typography.bodySmall)
+                    Text(usuarioNombre, fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                    Text("Paciente Asegurado", fontSize = 12.sp, color = Color.Gray)
+                    Surface(
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        shape = CircleShape,
+                        modifier = Modifier.padding(top = 4.dp)
+                    ) {
+                        Text(
+                            "Plan SaludPlus",
+                            fontSize = 10.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                        )
+                    }
                 }
             }
-            Spacer(Modifier.height(16.dp))
-            HorizontalDivider()
-            Spacer(Modifier.height(8.dp))
 
-            drawerItems.forEach { item ->
-                NavigationDrawerItem(
-                    label = { Text(item.label) },
-                    icon = { Icon(item.icon, contentDescription = item.label) },
-                    selected = currentRoute == item.route,
-                    onClick = {
-                        onDestinationClick(item.route)
-                        onCloseDrawer()
-                    }
-                )
+            Spacer(modifier = Modifier.height(20.dp))
+            HorizontalDivider()
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // MENÚ DE NAVEGACIÓN PRINCIPAL
+            NavigationDrawerItem(
+                label = { Text("Inicio / Dashboard", fontWeight = FontWeight.SemiBold) },
+                icon = { Icon(Icons.Default.Home, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+                selected = false,
+                onClick = { onNavigate(Screen.Home.route); onCloseDrawer() }
+            )
+
+            NavigationDrawerItem(
+                label = { Text("Nuestras Sedes", fontWeight = FontWeight.SemiBold) },
+                icon = { Icon(Icons.Default.LocationOn, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+                selected = false,
+                onClick = { onNavigate(Screen.Sedes.route); onCloseDrawer() }
+            )
+
+            NavigationDrawerItem(
+                label = { Text("Doctores y Especialidades", fontWeight = FontWeight.SemiBold) },
+                icon = { Icon(Icons.Default.Person, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+                selected = false,
+                onClick = { onNavigate(Screen.Especialidades.route); onCloseDrawer() }
+            )
+
+            NavigationDrawerItem(
+                label = { Text("Mi Agenda / Citas", fontWeight = FontWeight.SemiBold) },
+                icon = { Icon(Icons.Default.DateRange, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+                selected = false,
+                onClick = { onNavigate(Screen.MisCitas.route); onCloseDrawer() }
+            )
+
+            NavigationDrawerItem(
+                label = { Text("Historial Médico / Resultados", fontWeight = FontWeight.SemiBold) },
+                icon = { Icon(Icons.Default.ReceiptLong, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+                selected = false,
+                onClick = { onNavigate(Screen.Resultados.route); onCloseDrawer() }
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Button(
+                onClick = { onCerrarSesion(); onCloseDrawer() },
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                shape = CircleShape,
+                modifier = Modifier.fillMaxWidth().height(48.dp)
+            ) {
+                Icon(Icons.Default.ExitToApp, contentDescription = null)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Cerrar Sesión", fontWeight = FontWeight.Bold)
             }
         }
     }
