@@ -9,8 +9,11 @@ import com.tecsup.murocampus.model.Post
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class DetalleUi(val post: Post, val comentarios: List<Comentario>)
@@ -37,6 +40,21 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
     private val _borrado = MutableStateFlow<UiState<Unit>?>(null)
     val borrado: StateFlow<UiState<Unit>?> = _borrado.asStateFlow()
 
+    // Búsqueda por título sobre lo ya descargado
+    private val _busqueda = MutableStateFlow("")
+    val busqueda: StateFlow<String> = _busqueda.asStateFlow()
+
+    val listaVisible: StateFlow<UiState<List<Post>>> =
+        combine(_lista, _busqueda) { estado, texto ->
+            if (estado is UiState.Exito && texto.isNotBlank()) {
+                UiState.Exito(
+                    estado.datos.filter { it.title.contains(texto.trim(), ignoreCase = true) }
+                )
+            } else {
+                estado
+            }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), UiState.Cargando)
+
     init { cargar() }
 
     fun cargar() {
@@ -53,6 +71,10 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
     fun filtrar(userId: Int?) {
         _usuarioFiltro.value = userId
         cargar()
+    }
+
+    fun buscar(texto: String) {
+        _busqueda.value = texto
     }
 
     fun abrir(id: Int) {
